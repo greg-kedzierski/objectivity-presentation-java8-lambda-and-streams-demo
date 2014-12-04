@@ -2,7 +2,6 @@ package io.github.loskunos.objectivity.demo.streams.realestate;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -76,7 +75,7 @@ public class StreamPlayground {
     realEstateStream = realEstates.stream();
     // reduce
     realEstateStream
-        .reduce( (e1, e2) -> e1.getArea() > e2.getArea()? e1: e2)
+        .reduce((e1, e2) -> e1.getArea() > e2.getArea() ? e1 : e2)
         .ifPresent(System.out::println);
 
     nl();
@@ -106,7 +105,7 @@ public class StreamPlayground {
 
     nl();
     // int streams
-    IntStream i = IntStream.iterate(1, n -> n + 1 ).limit(10);
+    IntStream i = IntStream.iterate(1, n -> n + 1).limit(10);
     System.out.println(i.summaryStatistics());
   }
 
