@@ -17,12 +17,14 @@ public class StreamPlayground {
     Stream<RealEstate> realEstateStream = realEstates.stream();
 
     // filtering
+    System.out.println("filtering");
     realEstateStream
         .filter(e -> e.getRealEstateAddress().getCity().equals("opole"))
         .filter(StreamPlayground::isBuy)
         .forEach(System.out::println);
 
     nl();
+    System.out.println("mapping");
     realEstateStream = realEstates.stream();
     // mapping
     realEstateStream
@@ -31,12 +33,14 @@ public class StreamPlayground {
         .forEach(System.out::println);
 
     nl();
+    System.out.println("to primitive int");
     realEstateStream = realEstates.stream();
-    // mapping to prinitives
+    // mapping to primitives
     System.out.println(
         realEstateStream.mapToInt(e -> e.getArea()).average().getAsDouble());
 
     nl();
+    System.out.println("collecting");
     realEstateStream = realEstates.stream();
     // collecting
     List<String> cities = realEstateStream
@@ -46,6 +50,7 @@ public class StreamPlayground {
     System.out.println(cities);
 
     nl();
+    System.out.println("collecting as string");
     realEstateStream = realEstates.stream();
     // collecting as String
     String strCities = realEstateStream
@@ -55,6 +60,7 @@ public class StreamPlayground {
     System.out.println(strCities);
 
     nl();
+    System.out.println("finding max");
     realEstateStream = realEstates.stream();
     // finding max
     realEstateStream
@@ -62,6 +68,7 @@ public class StreamPlayground {
         .ifPresent(System.out::println);
 
     nl();
+    System.out.println("reduce 1");
     realEstateStream = realEstates.stream();
     // reduce
     Integer sum = realEstateStream
@@ -72,6 +79,7 @@ public class StreamPlayground {
     System.out.println(sum);
 
     nl();
+    System.out.println("reduce 2");
     realEstateStream = realEstates.stream();
     // reduce
     realEstateStream
@@ -79,6 +87,7 @@ public class StreamPlayground {
         .ifPresent(System.out::println);
 
     nl();
+    System.out.println("group by");
     realEstateStream = realEstates.stream();
     // group by
     Map<RealEstateType, List<RealEstate>> groupByType =
@@ -87,6 +96,7 @@ public class StreamPlayground {
     System.out.println(groupByType);
 
     nl();
+    System.out.println("partition by");
     realEstateStream = realEstates.stream();
     // Partition  by
     Map<Boolean, List<RealEstate>> potentialFraud =
@@ -96,7 +106,9 @@ public class StreamPlayground {
     System.out.println(potentialFraud);
 
     nl();
+    System.out.println("flat map");
     realEstateStream = realEstates.stream();
+    System.out.println();
     // flat map
     realEstateStream
         .flatMap(e -> e.getContactPersons().stream())
@@ -104,9 +116,20 @@ public class StreamPlayground {
         .forEach(System.out::println);
 
     nl();
+    System.out.println("int streams");
     // int streams
     IntStream i = IntStream.iterate(1, n -> n + 1).limit(10);
     System.out.println(i.summaryStatistics());
+
+    nl();
+    System.out.println("group by, then map");
+    realEstateStream = realEstates.stream();
+    // group by
+    Map<RealEstateType, List<SimplerRealEstate>> groupByTypeAndMapped =
+        realEstateStream
+            .collect(groupingBy(RealEstate::getRealEstateType,
+                mapping(SimplerRealEstate::new, toList())));
+    System.out.println(groupByTypeAndMapped);
   }
 
   public static boolean isBuy(RealEstate realEstate) {
@@ -115,5 +138,19 @@ public class StreamPlayground {
 
   public static void nl() {
     System.out.println();
+  }
+
+  public static class SimplerRealEstate {
+    private final int price;
+    private SimplerRealEstate(RealEstate estate) {
+      this.price = estate.getPrice();
+    }
+
+    @Override
+    public String toString() {
+      return "SimplerRealEstate{" +
+          "price=" + price +
+          '}';
+    }
   }
 }
